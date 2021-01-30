@@ -9,16 +9,19 @@ import (
 const insertOffice = "insert into office (id, title, description, people, price, created_at) values (?,?,?,?,?,?)"
 const selectOffice = "select id, title, description, people, price, created_at, updated_at from office"
 
+// OfficeMySQL Struct
 type OfficeMySQL struct {
 	db *sql.DB
 }
 
+// NewOfficeMySQL Create MySQL Office
 func NewOfficeMySQL(db *sql.DB) *OfficeMySQL {
 	return &OfficeMySQL{
 		db: db,
 	}
 }
 
+// Create Create an office
 func (o *OfficeMySQL) Create(e *entity.Office) (entity.ID, error) {
 	stmt, err := o.db.Prepare(insertOffice)
 	if err != nil {
@@ -38,6 +41,7 @@ func (o *OfficeMySQL) Create(e *entity.Office) (entity.ID, error) {
 	return e.ID, nil
 }
 
+// List List all offices
 func (o *OfficeMySQL) List() ([]*entity.Office, error) {
 	stmt, err := o.db.Prepare(selectOffice)
 	if err != nil {

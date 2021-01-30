@@ -2,11 +2,12 @@ package handlers
 
 import (
 	"net/http"
+	"officerent/usecase/office"
 
 	"github.com/gin-gonic/gin"
 )
 
-func getOffice(teste string) gin.HandlerFunc {
+func getOffice(service office.UseCase) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		teste := struct {
 			Teste string
@@ -18,6 +19,7 @@ func getOffice(teste string) gin.HandlerFunc {
 	}
 }
 
-func InitOfficeHandlers(r *gin.Engine) {
-	r.GET("/office", getOffice("OI"))
+// InitOfficeHandlers Init routes for office
+func InitOfficeHandlers(r *gin.Engine, service office.UseCase) {
+	r.GET("/office", getOffice(service))
 }
