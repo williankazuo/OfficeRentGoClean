@@ -1,2 +1,2 @@
 run:
-	go run -tags local api/main.go
+	go run api/main.go
