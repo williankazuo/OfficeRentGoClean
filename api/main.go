@@ -12,6 +12,7 @@ import (
 	"officerent/api/handlers"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {

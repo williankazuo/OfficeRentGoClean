@@ -9,13 +9,12 @@ import (
 
 func getOffice(service office.UseCase) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		teste := struct {
-			Teste string
-		}{
-			"Teste",
+		offices, err := service.GetAllOffices()
+		if err != nil {
+			c.JSON()
 		}
 
-		c.JSON(http.StatusOK, teste)
+		c.JSON(http.StatusOK, offices)
 	}
 }
 
