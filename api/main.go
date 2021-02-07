@@ -28,6 +28,7 @@ func main() {
 	r := gin.Default()
 	r.GET("/ping", pingHandler)
 
+	// Office
 	officeRepo := repository.NewOfficeMySQL(db)
 	officeService := office.NewService(officeRepo)
 	handlers.InitOfficeHandlers(r, officeService)

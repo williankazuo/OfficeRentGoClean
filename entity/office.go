@@ -2,6 +2,7 @@ package entity
 
 import "time"
 
+// Office entity
 type Office struct {
 	ID          ID
 	Title       string
@@ -12,6 +13,7 @@ type Office struct {
 	UpdatedAt   time.Time
 }
 
+// NewOffice Creates a new Office entity
 func NewOffice(title string, description string, people int, price float64) (*Office, error) {
 	o := &Office{
 		ID:          NewID(),
@@ -22,7 +24,7 @@ func NewOffice(title string, description string, people int, price float64) (*Of
 		CreatedAt:   time.Now(),
 	}
 
-	err := o.Validate()
+	err := o.validate()
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +32,7 @@ func NewOffice(title string, description string, people int, price float64) (*Of
 	return o, nil
 }
 
-func (o *Office) Validate() error {
+func (o *Office) validate() error {
 	if o.Title == "" || o.People <= 0 || o.Price <= 0 {
 		return ErrInvalidEntity
 	}
