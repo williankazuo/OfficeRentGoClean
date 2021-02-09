@@ -8,6 +8,7 @@ import (
 
 const insertOffice = "insert into office (id, title, description, people, price, created_at) values (?,?,?,?,?,?)"
 const selectOffice = "select id, title, description, people, price, created_at, updated_at from office"
+const selectOfficeByID = "select id, title, description, people, price, created_at, updated_at from office where id = ? LIMIT 1"
 
 // OfficeMySQL Struct
 type OfficeMySQL struct {
@@ -21,7 +22,7 @@ func NewOfficeMySQL(db *sql.DB) *OfficeMySQL {
 	}
 }
 
-// Create Create an office
+// Create an office
 func (o *OfficeMySQL) Create(e *entity.Office) (entity.ID, error) {
 	stmt, err := o.db.Prepare(insertOffice)
 	if err != nil {
@@ -41,7 +42,7 @@ func (o *OfficeMySQL) Create(e *entity.Office) (entity.ID, error) {
 	return e.ID, nil
 }
 
-// List List all offices
+// List all offices
 func (o *OfficeMySQL) List() ([]*entity.Office, error) {
 	stmt, err := o.db.Prepare(selectOffice)
 	if err != nil {
@@ -64,4 +65,33 @@ func (o *OfficeMySQL) List() ([]*entity.Office, error) {
 	}
 
 	return offices, nil
+}
+
+// Get an office by id.
+func (o *OfficeMySQL) Get(id string) (*entity.Office, error) {
+	stmt, err := o.db.Prepare(selectOfficeByID)
+	if err != nil {
+		return nil, err
+	}
+
+	var offices []entity.Office
+	rows, err := stmt.Query(id)
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var office entity.Office
+		err = rows.Scan(&office.ID, &office.Title, &office.Description, &office.People, &office.Price, &office.CreatedAt, &office.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+		offices = append(offices, office)
+	}
+
+	if len(offices) > 0 {
+		return nil, err
+	}
+
+	return &offices[0], nil
 }

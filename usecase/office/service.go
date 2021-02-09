@@ -28,6 +28,20 @@ func (s *Service) GetAllOffices() ([]*entity.Office, error) {
 	return offices, nil
 }
 
+// GetOfficeDetail Get an office detail
+func (s *Service) GetOfficeDetail(id string) (*entity.Office, error) {
+	office, err := s.repo.Get(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if office == nil {
+		return nil, entity.ErrNotFound
+	}
+
+	return office, nil
+}
+
 // CreateOffice Create an office
 func (s *Service) CreateOffice(title string, description string, people int, price float64) (entity.ID, error) {
 	o, err := entity.NewOffice(title, description, people, price)

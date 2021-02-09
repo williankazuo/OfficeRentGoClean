@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func getOffice(service office.UseCase) gin.HandlerFunc {
+func getAllOffices(service office.UseCase) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		offices, err := service.GetAllOffices()
 		if err != nil && err != entity.ErrNotFound {
@@ -24,6 +24,23 @@ func getOffice(service office.UseCase) gin.HandlerFunc {
 
 		c.JSON(http.StatusOK, offices)
 		return
+	}
+}
+
+func getOfficeDetail(service office.UseCase) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Param("id")
+		office, err := service.GetOfficeDetail(id)
+		if err != nil && err != entity.ErrNotFound {
+			c.JSON(http.StatusInternalServerError, err)
+			return
+		}
+		if err == entity.ErrNotFound {
+			c.JSON(http.StatusNotFound, err)
+			return
+		}
+
+		c.JSON(http.StatusOK, office)
 	}
 }
 
@@ -48,6 +65,7 @@ func createOffice(service office.UseCase) gin.HandlerFunc {
 
 // InitOfficeHandlers Init routes for office
 func InitOfficeHandlers(r *gin.Engine, service office.UseCase) {
-	r.GET("/office", getOffice(service))
+	r.GET("/office", getAllOffices(service))
+	r.GET("/office/:id", getOfficeDetail(service))
 	r.POST("/office", createOffice(service))
 }
