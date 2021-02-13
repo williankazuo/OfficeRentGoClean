@@ -13,5 +13,5 @@ type Repository interface {
 type UseCase interface {
 	GetAllOffices() ([]*entity.Office, error)
 	GetOfficeDetail(id string) (*entity.Office, error)
-	CreateOffice(title string, description string, people int, price float64) (entity.ID, error)
+	CreateOffice(title string, description string, people int, price float64, country string, state string, city string, district string) (entity.ID, error)
 }

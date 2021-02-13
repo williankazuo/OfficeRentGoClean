@@ -6,9 +6,9 @@ import (
 	"time"
 )
 
-const insertOffice = "insert into office (id, title, description, people, price, created_at) values (?,?,?,?,?,?)"
-const selectOffice = "select id, title, description, people, price, created_at, updated_at from office"
-const selectOfficeByID = "select id, title, description, people, price, created_at, updated_at from office where id = ? LIMIT 1"
+const insertOffice = "insert into office (id, title, description, people, price, country, state, city, district, created_at) values (?,?,?,?,?,?,?,?,?,?)"
+const selectOffice = "select id, title, description, people, price, country, state, city, district, created_at, updated_at from office"
+const selectOfficeByID = "select id, title, description, people, price, country, state, city, district, created_at, updated_at from office where id = ? LIMIT 1"
 
 // OfficeMySQL Struct
 type OfficeMySQL struct {
@@ -29,7 +29,7 @@ func (o *OfficeMySQL) Create(e *entity.Office) (entity.ID, error) {
 		return e.ID, err
 	}
 
-	_, err = stmt.Exec(e.ID, e.Title, e.Description, e.People, e.Price, time.Now())
+	_, err = stmt.Exec(e.ID, e.Title, e.Description, e.People, e.Price, e.Country, e.State, e.City, e.District, time.Now())
 	if err != nil {
 		return e.ID, err
 	}

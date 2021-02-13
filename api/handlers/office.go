@@ -6,6 +6,7 @@ import (
 	"officerent/api/models"
 	"officerent/entity"
 	"officerent/usecase/office"
+	"officerent/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,11 +15,11 @@ func getAllOffices(service office.UseCase) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		offices, err := service.GetAllOffices()
 		if err != nil && err != entity.ErrNotFound {
-			c.JSON(http.StatusInternalServerError, err)
+			c.JSON(http.StatusInternalServerError, utils.NewErrorMessage(err.Error()))
 			return
 		}
 		if err == entity.ErrNotFound {
-			c.JSON(http.StatusNotFound, err)
+			c.JSON(http.StatusNotFound, utils.NewErrorMessage(err.Error()))
 			return
 		}
 
@@ -32,11 +33,11 @@ func getOfficeDetail(service office.UseCase) gin.HandlerFunc {
 		id := c.Param("id")
 		office, err := service.GetOfficeDetail(id)
 		if err != nil && err != entity.ErrNotFound {
-			c.JSON(http.StatusInternalServerError, err)
+			c.JSON(http.StatusInternalServerError, utils.NewErrorMessage(err.Error()))
 			return
 		}
 		if err == entity.ErrNotFound {
-			c.JSON(http.StatusNotFound, err)
+			c.JSON(http.StatusNotFound, utils.NewErrorMessage(err.Error()))
 			return
 		}
 
@@ -53,9 +54,9 @@ func createOffice(service office.UseCase) gin.HandlerFunc {
 			return
 		}
 
-		id, err := service.CreateOffice(oReq.Title, oReq.Description, oReq.People, oReq.Price)
+		id, err := service.CreateOffice(oReq.Title, oReq.Description, oReq.People, oReq.Price, oReq.Country, oReq.State, oReq.City, oReq.District)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, err)
+			c.JSON(http.StatusInternalServerError, utils.NewErrorMessage(err.Error()))
 			return
 		}
 

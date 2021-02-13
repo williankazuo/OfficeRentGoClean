@@ -43,8 +43,8 @@ func (s *Service) GetOfficeDetail(id string) (*entity.Office, error) {
 }
 
 // CreateOffice Create an office
-func (s *Service) CreateOffice(title string, description string, people int, price float64) (entity.ID, error) {
-	o, err := entity.NewOffice(title, description, people, price)
+func (s *Service) CreateOffice(title string, description string, people int, price float64, country string, state string, city string, district string) (entity.ID, error) {
+	o, err := entity.NewOffice(title, description, people, price, country, state, city, district)
 	if err != nil {
 		return o.ID, err
 	}

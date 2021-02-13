@@ -4,8 +4,6 @@ services:
     image: mysql:5.7
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_PASSWORD=root
-      - MYSQL_DATABASE=officerent
     volumes:
       - ./docker/data/:/var/lib/mysql
       - ./ops/sql:/tmp/scripts/sql
