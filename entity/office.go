@@ -14,7 +14,7 @@ type Office struct {
 	City        string
 	District    string
 	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	UpdatedAt   *time.Time
 }
 
 // NewOffice Creates a new Office entity

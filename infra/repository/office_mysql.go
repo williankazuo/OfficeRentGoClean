@@ -3,12 +3,13 @@ package repository
 import (
 	"database/sql"
 	"officerent/entity"
+	"strings"
 	"time"
 )
 
 const insertOffice = "insert into office (id, title, description, people, price, country, state, city, district, created_at) values (?,?,?,?,?,?,?,?,?,?)"
 const selectOffice = "select id, title, description, people, price, country, state, city, district, created_at, updated_at from office"
-const selectOfficeByID = "select id, title, description, people, price, country, state, city, district, created_at, updated_at from office where id = ? LIMIT 1"
+const selectOfficeByID = "select id, title, description, people, price, country, state, city, district, created_at, updated_at from office where id = UNHEX(?) LIMIT 1"
 
 // OfficeMySQL Struct
 type OfficeMySQL struct {
@@ -29,7 +30,8 @@ func (o *OfficeMySQL) Create(e *entity.Office) (entity.ID, error) {
 		return e.ID, err
 	}
 
-	_, err = stmt.Exec(e.ID, e.Title, e.Description, e.People, e.Price, e.Country, e.State, e.City, e.District, time.Now())
+	idBinary, _ := e.ID.MarshalBinary()
+	_, err = stmt.Exec(idBinary, e.Title, e.Description, e.People, e.Price, e.Country, e.State, e.City, e.District, time.Now())
 	if err != nil {
 		return e.ID, err
 	}
@@ -57,7 +59,8 @@ func (o *OfficeMySQL) List() ([]*entity.Office, error) {
 
 	for rows.Next() {
 		var office entity.Office
-		err = rows.Scan(&office.ID, &office.Title, &office.Description, &office.People, &office.Price, &office.CreatedAt, &office.UpdatedAt)
+		err = rows.Scan(&office.ID, &office.Title, &office.Description, &office.People, &office.Price, &office.Country,
+			&office.State, &office.City, &office.District, &office.CreatedAt, &office.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
@@ -75,6 +78,7 @@ func (o *OfficeMySQL) Get(id string) (*entity.Office, error) {
 	}
 
 	var offices []entity.Office
+	id = strings.ReplaceAll(id, "-", "")
 	rows, err := stmt.Query(id)
 	if err != nil {
 		return nil, err
@@ -82,14 +86,15 @@ func (o *OfficeMySQL) Get(id string) (*entity.Office, error) {
 
 	for rows.Next() {
 		var office entity.Office
-		err = rows.Scan(&office.ID, &office.Title, &office.Description, &office.People, &office.Price, &office.CreatedAt, &office.UpdatedAt)
+		err = rows.Scan(&office.ID, &office.Title, &office.Description, &office.People, &office.Price, &office.Country,
+			&office.State, &office.City, &office.District, &office.CreatedAt, &office.UpdatedAt)
 		if err != nil {
 			return nil, err
 		}
 		offices = append(offices, office)
 	}
 
-	if len(offices) > 0 {
+	if len(offices) <= 0 {
 		return nil, err
 	}
 
