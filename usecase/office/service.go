@@ -1,6 +1,9 @@
 package office
 
-import "officerent/entity"
+import (
+	"officerent/api/models"
+	"officerent/entity"
+)
 
 // Service Office usecase
 type Service struct {
@@ -29,7 +32,7 @@ func (s *Service) GetAllOffices() ([]*entity.Office, error) {
 }
 
 // GetOfficeDetail Get an office detail
-func (s *Service) GetOfficeDetail(id string) (*entity.Office, error) {
+func (s *Service) GetOfficeDetail(id string) (*models.OfficeRespose, error) {
 	office, err := s.repo.Get(id)
 	if err != nil {
 		return nil, err
@@ -43,7 +46,7 @@ func (s *Service) GetOfficeDetail(id string) (*entity.Office, error) {
 }
 
 // CreateOffice Create an office
-func (s *Service) CreateOffice(title string, description string, people int, price float64, country string, state string, city string, district string) (entity.ID, error) {
+func (s *Service) CreateOffice(title string, description string, people int, price float64, country, state, city, district int) (entity.ID, error) {
 	o, err := entity.NewOffice(title, description, people, price, country, state, city, district)
 	if err != nil {
 		return o.ID, err
