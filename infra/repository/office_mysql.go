@@ -9,7 +9,17 @@ import (
 )
 
 const insertOffice = "insert into office (id, title, description, people, price, country_id, state_id, city_id, district_id, created_at) values (?,?,?,?,?,?,?,?,?,?)"
-const selectOffice = "select id, title, description, people, price, country, state, city, district, created_at, updated_at from office"
+const selectOffice = `select o.id, o.title, o.description, o.people, o.price, c.country,
+					  s.state, ci.city, d.district, o.created_at, o.updated_at 
+					  from office o
+	 				  inner join country c
+					  on o.country_id = c.id
+					  inner join state s
+					  on o.state_id = s.id
+					  inner join city ci
+					  on o.city_id = ci.id
+					  inner join district d
+					  on o.district_id = d.id`
 const selectOfficeByID = `select o.id, o.title, o.description, o.people, o.price, c.country,
 						  s.state, ci.city, d.district, o.created_at, o.updated_at 
 						  from office o
@@ -58,20 +68,20 @@ func (o *OfficeMySQL) Create(e *entity.Office) (entity.ID, error) {
 }
 
 // List all offices
-func (o *OfficeMySQL) List() ([]*entity.Office, error) {
+func (o *OfficeMySQL) List() ([]*models.OfficeRespose, error) {
 	stmt, err := o.db.Prepare(selectOffice)
 	if err != nil {
 		return nil, err
 	}
 
-	var offices []*entity.Office
+	var offices []*models.OfficeRespose
 	rows, err := stmt.Query()
 	if err != nil {
 		return nil, err
 	}
 
 	for rows.Next() {
-		var office entity.Office
+		var office models.OfficeRespose
 		err = rows.Scan(&office.ID, &office.Title, &office.Description, &office.People, &office.Price, &office.Country,
 			&office.State, &office.City, &office.District, &office.CreatedAt, &office.UpdatedAt)
 		if err != nil {

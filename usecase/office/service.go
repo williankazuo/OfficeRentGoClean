@@ -18,7 +18,7 @@ func NewService(r Repository) *Service {
 }
 
 // GetAllOffices Get all the offices
-func (s *Service) GetAllOffices() ([]*entity.Office, error) {
+func (s *Service) GetAllOffices() ([]*models.OfficeRespose, error) {
 	offices, err := s.repo.List()
 	if err != nil {
 		return nil, err
